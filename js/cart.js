@@ -16,11 +16,11 @@ const EMAILJS_CONFIG = {
 /* If true, orders are also POSTed to the Node/Nodemailer backend in /backend
    (useful if you'd rather not expose EmailJS keys client-side).
    Set to true only once backend/server.js is deployed and reachable. */
-const USE_BACKEND_API = false;
+const USE_BACKEND_API = true;
 const BACKEND_ENDPOINT = "http://localhost:3000/api/order";
 
 /* Initialize EmailJS (safe no-op if the library hasn't loaded / not configured yet) */
-if (window.emailjs && EMAILJS_CONFIG.PUBLIC_KEY !== "YOUR_EMAILJS_PUBLIC_KEY") {
+if (window.emailjs && EMAILJS_CONFIG.PUBLIC_KEY !== "fyfR4zx5j3hO6dPKm") {
   emailjs.init({ publicKey: EMAILJS_CONFIG.PUBLIC_KEY });
 }
 
@@ -234,7 +234,7 @@ checkoutForm.addEventListener("submit", async (e) => {
       if (!res.ok) throw new Error("Backend request failed");
     } else {
       /* --- Option B: send via EmailJS directly from the browser --- */
-      if (!window.emailjs || EMAILJS_CONFIG.PUBLIC_KEY === "YOUR_EMAILJS_PUBLIC_KEY") {
+      if (!window.emailjs || EMAILJS_CONFIG.PUBLIC_KEY === "fyfR4zx5j3hO6dPKm") {
         throw new Error("EmailJS is not configured yet. See README.md setup steps.");
       }
       await emailjs.send(EMAILJS_CONFIG.SERVICE_ID, EMAILJS_CONFIG.TEMPLATE_ID, orderData);
