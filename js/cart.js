@@ -236,9 +236,9 @@ checkoutForm.addEventListener("submit", async (e) => {
       /* --- Option B: send via EmailJS directly from the browser --- */
       if (!window.emailjs || EMAILJS_CONFIG.PUBLIC_KEY === "") {
         throw new Error("EmailJS is not configured yet. See README.md setup steps.");
-      }
+      }else {
       await emailjs.send(EMAILJS_CONFIG.SERVICE_ID, EMAILJS_CONFIG.TEMPLATE_ID, orderData);
-    }
+    }}
 
     formStatus.textContent = "Order received — a confirmation has been sent to our team.";
     formStatus.classList.add("success");
