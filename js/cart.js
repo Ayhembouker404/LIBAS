@@ -9,8 +9,8 @@
    ========================================================================= */
 const EMAILJS_CONFIG = {
   PUBLIC_KEY: "fyfR4zx5j3hO6dPKm",
-  SERVICE_ID: "service_LIBAS",
-  TEMPLATE_ID: "template_order",
+  SERVICE_ID: "service_yts2dm9",
+  TEMPLATE_ID: "template_7ky89lc",
 };
 
 /* If true, orders are also POSTed to the Node/Nodemailer backend in /backend
