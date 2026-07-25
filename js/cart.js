@@ -8,9 +8,9 @@
    then paste your IDs below. See README.md for full step-by-step setup.
    ========================================================================= */
 const EMAILJS_CONFIG = {
-  PUBLIC_KEY: "YOUR_EMAILJS_PUBLIC_KEY",
-  SERVICE_ID: "YOUR_EMAILJS_SERVICE_ID",
-  TEMPLATE_ID: "YOUR_EMAILJS_TEMPLATE_ID",
+  PUBLIC_KEY: "fyfR4zx5j3hO6dPKm",
+  SERVICE_ID: "service_LIBAS",
+  TEMPLATE_ID: "template_order",
 };
 
 /* If true, orders are also POSTed to the Node/Nodemailer backend in /backend
