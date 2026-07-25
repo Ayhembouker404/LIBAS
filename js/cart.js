@@ -16,7 +16,7 @@ const EMAILJS_CONFIG = {
 /* If true, orders are also POSTed to the Node/Nodemailer backend in /backend
    (useful if you'd rather not expose EmailJS keys client-side).
    Set to true only once backend/server.js is deployed and reachable. */
-const USE_BACKEND_API = true;
+const USE_BACKEND_API = false;
 const BACKEND_ENDPOINT = "http://localhost:3000/api/order";
 
 /* Initialize EmailJS (safe no-op if the library hasn't loaded / not configured yet) */
