@@ -252,7 +252,7 @@ checkoutForm.addEventListener("submit", async (e) => {
       closeCartDrawer();
       window.showToast("Thank you for your order.");
       formStatus.textContent = "";
-    }, 5000);
+    }, 1800);
   } catch (err) {
     console.error(err);
     formStatus.textContent = err.message || "Something went wrong. Please try again.";
