@@ -9,7 +9,7 @@
    ========================================================================= */
 const EMAILJS_CONFIG = {
   PUBLIC_KEY: "VqMP1Iydp8rWZlVPNPCaN",
-  SERVICE_ID: "service_LIBAS",
+  SERVICE_ID: "service_yts2dm9",
   TEMPLATE_ID: "template_7ky89lc",
 };
 
