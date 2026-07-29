@@ -3,26 +3,20 @@
    ========================================================================== */
 
 /* =========================================================================
-   1. EMAILJS CONFIG
-   Sign up free at https://www.emailjs.com, create an Email Service + Template,
-   then paste your IDs below. See README.md for full step-by-step setup.
+   1. WEB3FORMS CONFIG
+   1. Go to https://web3forms.com and enter the email you want orders sent to.
+   2. You'll instantly get an Access Key (no account/login required).
+   3. Paste it below. That's the entire setup — no template, no service IDs.
    ========================================================================= */
-const EMAILJS_CONFIG = {
-  PUBLIC_KEY: "fyfR4zx5j3hO6dPKm",
-  SERVICE_ID: "service_yts2dm9",
-  TEMPLATE_ID: "template_order",
+const WEB3FORMS_CONFIG = {
+  ACCESS_KEY: "485e2eca-58b7-4426-b71a-53858f3cf7f1",
 };
 
-/* If true, orders are also POSTed to the Node/Nodemailer backend in /backend
-   (useful if you'd rather not expose EmailJS keys client-side).
-   Set to true only once backend/server.js is deployed and reachable. */
+/* If true, orders are instead POSTed to the Node/Nodemailer backend in /backend
+   (useful if you're running your own server instead of a static host like
+   GitHub Pages). Set to true only once backend/server.js is deployed and reachable. */
 const USE_BACKEND_API = false;
 const BACKEND_ENDPOINT = "http://localhost:3000/api/order";
-
-/* Initialize EmailJS (safe no-op if the library hasn't loaded / not configured yet) */
-if (window.emailjs && EMAILJS_CONFIG.PUBLIC_KEY !== "fyfR4zx5j3hO6dPKm") {
-  emailjs.init({ publicKey: EMAILJS_CONFIG.PUBLIC_KEY });
-}
 
 /* ---------- Cart State ---------- */
 let cart = JSON.parse(localStorage.getItem("aureumCart") || "[]");
@@ -213,15 +207,12 @@ checkoutForm.addEventListener("submit", async (e) => {
     })
     .join("\n");
 
-  const orderData = {
-    customer_name: document.getElementById("custName").value,
-    customer_email: document.getElementById("custEmail").value,
-    shipping_address: document.getElementById("custAddress").value,
-    order_notes: document.getElementById("custNotes").value || "None",
-    order_items: orderLines,
-    order_total: formatPrice2(cartTotal()),
-    order_date: new Date().toLocaleString(),
-  };
+  const customerName = document.getElementById("custName").value;
+  const customerEmail = document.getElementById("custEmail").value;
+  const shippingAddress = document.getElementById("custAddress").value;
+  const orderNotes = document.getElementById("custNotes").value || "None";
+  const orderTotal = formatPrice2(cartTotal());
+  const orderDate = new Date().toLocaleString();
 
   try {
     if (USE_BACKEND_API) {
@@ -229,15 +220,44 @@ checkoutForm.addEventListener("submit", async (e) => {
       const res = await fetch(BACKEND_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(orderData),
+        body: JSON.stringify({
+          customer_name: customerName,
+          customer_email: customerEmail,
+          shipping_address: shippingAddress,
+          order_notes: orderNotes,
+          order_items: orderLines,
+          order_total: orderTotal,
+          order_date: orderDate,
+        }),
       });
       if (!res.ok) throw new Error("Backend request failed");
     } else {
-      /* --- Option B: send via EmailJS directly from the browser --- */
-      if (!window.emailjs || EMAILJS_CONFIG.PUBLIC_KEY === "YOUR-KEY") {
-        throw new Error("EmailJS is not configured yet. See README.md setup steps.");
+      /* --- Option B: send via Web3Forms directly from the browser ---
+         No SDK, no init step — just a POST with your access key + fields.
+         Web3Forms emails everything straight to the inbox you registered. */
+      if (WEB3FORMS_CONFIG.ACCESS_KEY === "YOUR_WEB3FORMS_ACCESS_KEY") {
+        throw new Error("Web3Forms is not configured yet. Paste your access key in cart.js.");
       }
-      await emailjs.send(EMAILJS_CONFIG.SERVICE_ID, EMAILJS_CONFIG.TEMPLATE_ID, orderData);
+
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_CONFIG.ACCESS_KEY,
+          subject: `New Order from ${customerName} — ${orderTotal}`,
+          from_name: "Aureum & Oak — Order Notifications",
+          name: customerName,
+          email: customerEmail,
+          shipping_address: shippingAddress,
+          order_notes: orderNotes,
+          order_items: orderLines,
+          order_total: orderTotal,
+          order_date: orderDate,
+        }),
+      });
+
+      const result = await res.json();
+      if (!result.success) throw new Error(result.message || "Web3Forms rejected the request.");
     }
 
     formStatus.textContent = "Order received — a confirmation has been sent to our team.";
@@ -255,11 +275,7 @@ checkoutForm.addEventListener("submit", async (e) => {
     }, 1800);
   } catch (err) {
     console.error("Order submission failed:", err);
-    // EmailJS rejects with { status, text } rather than a standard Error object,
-    // so check for that shape first to surface the real reason.
-    const readableError =
-      err?.text || err?.message || (typeof err === "string" ? err : null) || "Something went wrong. Please try again.";
-    formStatus.textContent = `${readableError}${err?.status ? ` (code ${err.status})` : ""}`;
+    formStatus.textContent = err.message || "Something went wrong. Please try again.";
     formStatus.classList.add("error");
   } finally {
     submitLabel.textContent = "Confirm & Send Order";
