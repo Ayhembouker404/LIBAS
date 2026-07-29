@@ -245,7 +245,7 @@ checkoutForm.addEventListener("submit", async (e) => {
         body: JSON.stringify({
           access_key: WEB3FORMS_CONFIG.ACCESS_KEY,
           subject: `New Order from ${customerName} — ${orderTotal}`,
-          from_name: "Aureum & Oak — Order Notifications",
+          from_name: "LIBAS — Order Notifications",
           name: customerName,
           email: customerEmail,
           shipping_address: shippingAddress,
