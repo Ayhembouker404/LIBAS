@@ -8,8 +8,8 @@
    then paste your IDs below. See README.md for full step-by-step setup.
    ========================================================================= */
 const EMAILJS_CONFIG = {
-  PUBLIC_KEY: "fyfR4zx5j3hO6dPKm",
-  SERVICE_ID: "service_yts2dm9",
+  PUBLIC_KEY: "VqMP1Iydp8rWZlVPNPCaN",
+  SERVICE_ID: "service_LIBAS",
   TEMPLATE_ID: "template_7ky89lc",
 };
 
@@ -20,7 +20,7 @@ const USE_BACKEND_API = false;
 const BACKEND_ENDPOINT = "http://localhost:3000/api/order";
 
 /* Initialize EmailJS (safe no-op if the library hasn't loaded / not configured yet) */
-if (window.emailjs && EMAILJS_CONFIG.PUBLIC_KEY !== "fyfR4zx5j3hO6dPKm") {
+if (window.emailjs && EMAILJS_CONFIG.PUBLIC_KEY !== "VqMP1Iydp8rWZlVPNPCaN") {
   emailjs.init({ publicKey: EMAILJS_CONFIG.PUBLIC_KEY });
 }
 
@@ -78,7 +78,7 @@ function cartCount() {
 }
 
 const formatPrice2 = (n) =>
-  "¥" + n.toLocaleString("cn-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 /* ---------- Render Cart Drawer ---------- */
 const cartItemsEl = document.getElementById("cartItems");
@@ -234,11 +234,11 @@ checkoutForm.addEventListener("submit", async (e) => {
       if (!res.ok) throw new Error("Backend request failed");
     } else {
       /* --- Option B: send via EmailJS directly from the browser --- */
-      if (!window.emailjs || EMAILJS_CONFIG.PUBLIC_KEY === "") {
+      if (!window.emailjs || EMAILJS_CONFIG.PUBLIC_KEY === "VqMP1Iydp8rWZlVPNPCaN") {
         throw new Error("EmailJS is not configured yet. See README.md setup steps.");
-      }else {
+      }
       await emailjs.send(EMAILJS_CONFIG.SERVICE_ID, EMAILJS_CONFIG.TEMPLATE_ID, orderData);
-    }}
+    }
 
     formStatus.textContent = "Order received — a confirmation has been sent to our team.";
     formStatus.classList.add("success");
@@ -254,8 +254,12 @@ checkoutForm.addEventListener("submit", async (e) => {
       formStatus.textContent = "";
     }, 1800);
   } catch (err) {
-    console.error(err);
-    formStatus.textContent = err.message || "Something went wrong. Please try again.";
+    console.error("Order submission failed:", err);
+    // EmailJS rejects with { status, text } rather than a standard Error object,
+    // so check for that shape first to surface the real reason.
+    const readableError =
+      err?.text || err?.message || (typeof err === "string" ? err : null) || "Something went wrong. Please try again.";
+    formStatus.textContent = `${readableError}${err?.status ? ` (code ${err.status})` : ""}`;
     formStatus.classList.add("error");
   } finally {
     submitLabel.textContent = "Confirm & Send Order";
