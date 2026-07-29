@@ -8,9 +8,9 @@
    then paste your IDs below. See README.md for full step-by-step setup.
    ========================================================================= */
 const EMAILJS_CONFIG = {
-  PUBLIC_KEY: "VqMP1Iydp8rWZlVPNPCaN",
+  PUBLIC_KEY: "fyfR4zx5j3hO6dPKm",
   SERVICE_ID: "service_yts2dm9",
-  TEMPLATE_ID: "template_7ky89lc",
+  TEMPLATE_ID: "template_order",
 };
 
 /* If true, orders are also POSTed to the Node/Nodemailer backend in /backend
@@ -20,7 +20,7 @@ const USE_BACKEND_API = false;
 const BACKEND_ENDPOINT = "http://localhost:3000/api/order";
 
 /* Initialize EmailJS (safe no-op if the library hasn't loaded / not configured yet) */
-if (window.emailjs && EMAILJS_CONFIG.PUBLIC_KEY !== "VqMP1Iydp8rWZlVPNPCaN") {
+if (window.emailjs && EMAILJS_CONFIG.PUBLIC_KEY !== "fyfR4zx5j3hO6dPKm") {
   emailjs.init({ publicKey: EMAILJS_CONFIG.PUBLIC_KEY });
 }
 
