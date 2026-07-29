@@ -234,7 +234,7 @@ checkoutForm.addEventListener("submit", async (e) => {
       if (!res.ok) throw new Error("Backend request failed");
     } else {
       /* --- Option B: send via EmailJS directly from the browser --- */
-      if (!window.emailjs || EMAILJS_CONFIG.PUBLIC_KEY === "VqMP1Iydp8rWZlVPNPCaN") {
+      if (!window.emailjs || EMAILJS_CONFIG.PUBLIC_KEY === "YOUR-KEY") {
         throw new Error("EmailJS is not configured yet. See README.md setup steps.");
       }
       await emailjs.send(EMAILJS_CONFIG.SERVICE_ID, EMAILJS_CONFIG.TEMPLATE_ID, orderData);
